@@ -1,0 +1,6 @@
+<Alloy>
+	<Window class="container" id="win">
+		<TextArea id="textLog"></TextArea>
+		<TableView id="tableView" onClick="onRowClick"></TableView>
+	</Window>
+</Alloy>
