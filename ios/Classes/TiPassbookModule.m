@@ -119,14 +119,9 @@
     return [NSDictionary dictionaryWithObject:passes forKey:@"passIds"];
 }
 
-#pragma mark - Public APIs
+#pragma mark - Utils
 
--(id)isPassLibraryAvailable:(id)args
-{
-    return NUMBOOL([PKPassLibrary isPassLibraryAvailable]);
-}
-
--(void)addPass:(id)args
+-(PKPass *)passFromArgs:(id)args
 {
     ENSURE_SINGLE_ARG(args, NSDictionary);
     TiBlob *blob = [args objectForKey:@"passData"];
@@ -138,12 +133,29 @@
         [self throwException:[error localizedDescription]
                    subreason:nil
                     location:CODELOCATION];
+        return nil;
+    }
+    
+    return pass;
+}
+
+#pragma mark - Public APIs
+
+-(id)isPassLibraryAvailable:(id)args
+{
+    return NUMBOOL([PKPassLibrary isPassLibraryAvailable]);
+}
+
+-(void)addPass:(id)args
+{
+    PKPass *pass = [self passFromArgs:args];
+    if (!pass) {
         return;
     }
     
     __block PKAddPassesViewController *addPassVC = [[PKAddPassesViewController alloc] initWithPass:pass];
     if (!addPassVC) {
-        [self throwException:@"PKAssPassesViewController could not be created."
+        [self throwException:@"PKAddPassesViewController could not be created."
                    subreason:nil
                     location:CODELOCATION];
         return;
@@ -156,16 +168,8 @@
 
 -(id)containsPass:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    TiBlob *blob = [args objectForKey:@"passData"];
-    ENSURE_TYPE(blob, TiBlob);
-    
-    NSError *error = nil;
-    PKPass *pass = [[[PKPass alloc] initWithData:blob.data error:&error] autorelease];
-    if (error) {
-        [self throwException:[error localizedDescription]
-                   subreason:nil
-                    location:CODELOCATION];
+    PKPass *pass = [self passFromArgs:args];
+    if (!pass) {
         return NUMBOOL(NO);
     }
     
@@ -180,16 +184,8 @@
 
 -(id)replacePass:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSDictionary);
-    TiBlob *blob = [args objectForKey:@"passData"];
-    ENSURE_TYPE(blob, TiBlob);
-    
-    NSError *error = nil;
-    PKPass *pass = [[[PKPass alloc] initWithData:blob.data error:&error] autorelease];
-    if (error) {
-        [self throwException:[error localizedDescription]
-                   subreason:nil
-                    location:CODELOCATION];
+    PKPass *pass = [self passFromArgs:args];
+    if (!pass) {
         return NUMBOOL(NO);
     }
     

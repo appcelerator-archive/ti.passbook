@@ -32,33 +32,33 @@ description: |
     ** Note:** It is not necessary to setup entitlements when running on the simulator.
 
     #### Pass
-    1. Go to the Apple provisioning portal "Identifiers" > "Pass Type IDs"
+    1. Go to the Apple provisioning portal **Identifiers** > **Pass Type IDs**
     2. Create a new Pass Type ID
-    3. Go to "App IDs"
+    3. Go to **App IDs**
     4. Create an App ID and enable Passbook for your App ID
-    5. Go to "Provisioning Profiles"
+    5. Go to **Provisioning Profiles**
     6. Create a new Provisioning Profile and associate it with your App ID
     7. Download and double click your Provisioning Profile
-    8. Go to the [Passbook Developer page](https://developer.apple.com/Passbook/) and download the "Example Passes and Sample Code"
-    9. In the "pass.json" file of one of the raw passes found in "Example Passes and Sample Code", replace the value for "passTypeIdentifier" with your Pass Type ID
-    10. In the "Example Passes and Sample Code" open the "signpass" project with Xcode and build it
-    11. Use the newly created signcode command line program to sign the pass that you just edited
+    8. Go to the [Passbook Developer page](https://developer.apple.com/Passbook/) and download the **Example Passes and Sample Code**
+    9. In the `pass.json` file of one of the raw passes found in **Example Passes and Sample Code**, replace the value for **passTypeIdentifier** with your Pass Type ID
+    10. In the **Example Passes and Sample Code** open the `signpass` project with Xcode and build it
+    11. Use the newly created `signpass` command line program to sign the pass that you just edited
     12. You can add your new pass to your device by emailing it to your device or you can drag it into the simulator
 
     #### Entitlements
-    1. Build your project once for device (running on the simulator will not generate the Entitlements.plist file we need)
-    2. Look in the "build/iphone" folder of your project and find the Entitlements.plist file 
-    3. Copy the Entitlements.plist to the root of your project next to Resources
-    4. Edit the Entitlements.plist in the root of your project and add the lines below
+    1. Build your project once for device (running on the simulator will not generate the `Entitlements.plist` file we need)
+    2. Look in the `build/iphone` folder of your project and find the `Entitlements.plist` file 
+    3. Copy the `Entitlements.plist` to the root of your project next to Resources
+    4. Edit the `Entitlements.plist` in the root of your project and add the lines below
 
-    To entitle app for a single pass type id (replace the Pass Type ID with our own):
+    To entitle the app for a single pass type ID (replace the Pass Type ID with your own):
         
         <key>com.apple.developer.pass-type-identifiers</key>
         <array>
             <string>$(TeamIdentifierPrefix)pass.com.appc.passkit.lollipop</string>
         </array>
 
-    To enable all pass type identifiers from the provisioning profile (replace the App ID with our own):
+    To entitle the app for all pass type IDs from the provisioning profile (replace the App ID with your own):
 
         <key>keychain-access-groups</key>
         <array>
@@ -104,7 +104,7 @@ methods:
         type: Dictionary<PassbookAddPassProps>
 
   - name: containsPass
-    summary: Returns whether the users pass library contains a pass.
+    summary: Returns whether the user's pass library contains a pass.
     description: |
         Throws an exception if there is a problem with the pass.
 
@@ -142,7 +142,7 @@ methods:
     description: |
         Throws an exception if there is a problem with the pass.
 
-        Returns a true if the action was successful or false if it failed.
+        Returns true if the action was successful or false if it failed.
 
         **Example**
 

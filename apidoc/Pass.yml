@@ -7,7 +7,7 @@ description: |
     -   For more info on passes see the [PKPass Class Reference](http://developer.apple.com/library/ios/#documentation/PassKit/Reference/PKPass_Ref/PKPass.html)
 
 extends: Titanium.Proxy
-plarforms: [iphone]
+platforms: [iphone]
 excludes:
     methods: [addEventListener, fireEvent, removeEventListener, applyProperties]
     properties: [bubbleParent]

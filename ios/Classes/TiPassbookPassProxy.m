@@ -14,7 +14,6 @@
 
 -(TiPassbookPassProxy *)initWithPass:(PKPass *)pass pageContext:(id<TiEvaluator>)context
 {
-    NSLog(@"TiPassbookPassProxy initWithPass");
     if (self = [super _initWithPageContext:context]) {
         _pass = [pass retain];
     }
