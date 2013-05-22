@@ -1,0 +1,81 @@
+---
+name: Modules.Passbook.Pass
+summary: A <Modules.Passbook> object which represents a Pass from the Passbook library.
+description: |
+
+    ### Pass Resources
+    -   For more info on passes see the [PKPass Class Reference](http://developer.apple.com/library/ios/#documentation/PassKit/Reference/PKPass_Ref/PKPass.html)
+
+extends: Titanium.Proxy
+platforms: [iphone]
+excludes:
+    methods: [addEventListener, fireEvent, removeEventListener, applyProperties]
+    properties: [bubbleParent]
+createable: false
+
+methods:
+  - name: localizedValueForFieldKey
+    summary: Returns the localized value for a specified field of the pass.
+    description: |
+
+        **Example**
+
+            var testProp = pass.localizedValueForFieldKey('testprop');
+
+    parameters:
+      - name: key
+        summary: The key for the value to be retreived from the pass
+        type: String
+    returns:
+        type: String
+
+properties:
+  - name: passURL
+    summary: The URL that opens the pass in the Passbook app.
+    type: String
+    permission: "read-only"
+
+  - name: authenticationToken
+    summary: The token used to authenticate with the web service
+    type: String
+    permission: "read-only"
+
+  - name: passTypeIdentifier
+    summary: The pass's type identifier.
+    type: String
+    permission: "read-only"
+
+  - name: serialNumber
+    summary: A value that uniquely identifies the pass.
+    type: String
+    permission: "read-only"
+
+  - name: webServiceURL
+    summary: The URL for your web service.
+    type: String
+    permission: "read-only"
+
+  - name: localizedName
+    summary: The localized description of the pass's kind. (eg. "Boarding Pass")
+    type: String
+    permission: "read-only"
+
+  - name: localizedDescription
+    summary: The pass's localized description. (eg. "SJC -> PIT")
+    type: String
+    permission: "read-only"
+
+  - name: organizationName
+    summary: The name of the organization that created the pass. (eg. "Flying Airways")
+    type: String
+    permission: "read-only"
+
+  - name: relevantDate
+    summary: The date when the pass is most likely to be needed or useful.
+    type: Date
+    permission: "read-only"
+
+  - name: icon
+    summary: The pass's icon.
+    type: Titanium.Blob
+    permission: "read-only"
