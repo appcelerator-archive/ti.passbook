@@ -16,7 +16,7 @@ var rows = [
 		}
 	},
 	{
-		// Add a pass the the pass library
+		// Add a pass to the pass library
 		// The user will be prompted to add the pass
 		title: "Add Pass",
 		onClick: function(){
@@ -30,6 +30,28 @@ var rows = [
 			}
 		}
 	},
+	{
+        // Add multiple passes to the pass library
+        // The user will be prompted to add the passes
+        // Only available on iOS 7 +
+        title: "Add Passes",
+        onClick: function(){
+            var file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, "passes", "Lollipop.pkpass");
+            var file2 = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, "passes", "Lollipop2.pkpass");
+            try {
+                Passbook.addPasses([
+                    {
+                        passData: file.blob
+                    },
+                    {
+                        passData: file2.blob
+                    }
+                ]);
+            } catch(err) {
+                Log(err);
+            }
+        }
+    },
 	{
 		// This will throw an error which we will catch
 		title: "Add Bad Pass",
@@ -78,6 +100,7 @@ var rows = [
 				Ti.API.info("passTypeIdentifier: "+pass.passTypeIdentifier);
 				Ti.API.info("serialNumber: "+pass.serialNumber);
 				Ti.API.info("webServiceURL: "+pass.webServiceURL);
+				Ti.API.info("userInfo: "+pass.userInfo); // Only available on iOS 7 +
 				
 				Ti.API.info("localizedName: "+pass.localizedName);
 				Ti.API.info("localizedDescription: "+pass.localizedDescription);
@@ -85,8 +108,8 @@ var rows = [
 				Ti.API.info("relevantDate: "+pass.relevantDate);
 				Ti.API.info("passURL: "+pass.passURL);
 				Ti.API.info("Year: "+pass.relevantDate.getFullYear());
-				
-				// There is a custom key named "westley" in the Lollipop.pkpass with a value of "As you wish"
+                
+				// There is a custom key named "westley" in the Lollipop.pkpass with a value of "as you wish"
 				Ti.API.info("localizedValueForFieldKey: "+pass.localizedValueForFieldKey("westley"));
 				Ti.API.info("icon: "+pass.icon);
 				Ti.API.info("============End Pass===============");
@@ -210,6 +233,10 @@ Passbook.addEventListener("replacedpasses", function(e){
 	}
 });
 
+Passbook.addEventListener("addpassesviewclosed", function() {
+    Log("Module event: addpassesviewclosed");
+});
+
 function Log(text) {
 	$.textLog.value = text + "\n" + $.textLog.value;
 	Ti.API.info(text);
@@ -219,6 +246,25 @@ function onRowClick(e) {
     e.source.onClick && e.source.onClick();
 }
 
+function isIOS7Plus()
+{
+    if (Titanium.Platform.name == 'iPhone OS')
+    {
+        var version = Titanium.Platform.version.split(".");
+        var major = parseInt(version[0],10);
+        
+        // can only test this support on a 3.2+ device
+        if (major >= 7)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+var iOS7 = isIOS7Plus();
+
 $.tableView.data = rows;
+
+$.win.top = iOS7 ? 20 : 0;
 $.win.open();
 

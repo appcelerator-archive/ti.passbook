@@ -10,10 +10,12 @@
 
 #import "TiModule.h"
 
-@interface TiPassbookModule : TiModule
+@interface TiPassbookModule : TiModule <PKAddPassesViewControllerDelegate>
 {
 @private
    PKPassLibrary *_passLibrary;
 }
+
++(void)logAddedIniOS7Warning:(NSString*)name;
 
 @end

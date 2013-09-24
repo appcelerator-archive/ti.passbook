@@ -119,6 +119,18 @@
     return [NSDictionary dictionaryWithObject:passes forKey:@"passIds"];
 }
 
+#pragma mark Delegates
+
+-(void)addPassesViewControllerDidFinish:(PKAddPassesViewController *)controller {
+    TiThreadPerformOnMainThread(^{
+        [[TiApp controller] dismissViewControllerAnimated:YES completion:^{
+            if ([self _hasListeners:@"addpassesviewclosed"]) {
+                [self fireEvent:@"addpassesviewclosed" withObject:nil];
+            }
+        }];
+    }, NO);
+}
+
 #pragma mark - Utils
 
 -(PKPass *)passFromArgs:(id)args
@@ -139,6 +151,11 @@
     return pass;
 }
 
++(void)logAddedIniOS7Warning:(NSString*)name
+{
+    NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
+}
+
 #pragma mark - Public APIs
 
 -(id)isPassLibraryAvailable:(id)args
@@ -153,16 +170,52 @@
         return;
     }
     
-    __block PKAddPassesViewController *addPassVC = [[PKAddPassesViewController alloc] initWithPass:pass];
-    if (!addPassVC) {
-        [self throwException:@"PKAddPassesViewController could not be created."
-                   subreason:nil
-                    location:CODELOCATION];
+    TiThreadPerformOnMainThread(^{
+        __block PKAddPassesViewController *addPassVC = [[PKAddPassesViewController alloc] initWithPass:pass];
+        if (!addPassVC) {
+            [self throwException:@"PKAddPassesViewController could not be created."
+                       subreason:nil
+                        location:CODELOCATION];
+            return;
+        }
+        
+        addPassVC.delegate = self;
+        [[TiApp controller] presentViewController:addPassVC animated:YES completion:^{
+            RELEASE_TO_NIL(addPassVC);
+        }];
+    }, NO);
+}
+
+-(void)addPasses:(id)args
+{
+    if (![TiUtils isIOS7OrGreater]) {
+        [TiPassbookModule logAddedIniOS7Warning:@"addPasses()"];
         return;
     }
     
-    [[TiApp controller] presentViewController:addPassVC animated:YES completion:^{
-        RELEASE_TO_NIL(addPassVC);
+    ENSURE_SINGLE_ARG(args, NSArray);
+    NSMutableArray *passes = [NSMutableArray arrayWithCapacity:[args count]];
+    for (id passData in args) {
+        [passes addObject:[self passFromArgs:passData]];
+    }
+    
+    [_passLibrary addPasses:passes withCompletionHandler:^(PKPassLibraryAddPassesStatus status) {
+        TiThreadPerformOnMainThread(^{
+            if (status == PKPassLibraryShouldReviewPasses) {
+                __block PKAddPassesViewController *addPassVC = [[PKAddPassesViewController alloc] initWithPasses:passes];
+                if (!addPassVC) {
+                    [self throwException:@"PKAddPassesViewController could not be created."
+                               subreason:nil
+                                location:CODELOCATION];
+                    return;
+                }
+                
+                addPassVC.delegate = self;
+                [[TiApp controller] presentViewController:addPassVC animated:YES completion:^{
+                    RELEASE_TO_NIL(addPassVC);
+                }];
+            }
+        }, NO);
     }];
 }
 

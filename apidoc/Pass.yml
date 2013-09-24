@@ -55,6 +55,12 @@ properties:
     type: String
     permission: "read-only"
 
+  - name: userInfo
+    since: "1.1.0"
+    summary: Developer-specific custom data. Only available on iOS 7 and greater.
+    type: Dictionary
+    permission: "read-only"
+
   - name: localizedName
     summary: The localized description of the pass's kind. (eg. "Boarding Pass")
     type: String

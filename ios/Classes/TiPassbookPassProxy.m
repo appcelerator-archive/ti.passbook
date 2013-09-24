@@ -7,6 +7,7 @@
 #import <PassKit/PassKit.h>
 #import "TiPassbookPassProxy.h"
 #import "TiBlob.h"
+#import "TiPassbookModule.h"
 
 @implementation TiPassbookPassProxy
 
@@ -57,6 +58,16 @@ MAKE_READONLY_PROP(_pass, relevantDate);
 -(TiBlob*)icon
 {
     return [[[TiBlob alloc] initWithImage:[_pass icon]] autorelease];
+}
+
+-(id)userInfo
+{
+    if (![TiUtils isIOS7OrGreater]) {
+        [TiPassbookModule logAddedIniOS7Warning:@"userInfo"];
+        return nil;
+    }
+    
+    return [_pass userInfo];
 }
 
 @end

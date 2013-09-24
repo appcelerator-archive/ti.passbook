@@ -37,6 +37,7 @@ module.exports = new function ()
 	{
 		valueOf(testRun, Passbook.isPassLibraryAvailable).shouldBeFunction();
 		valueOf(testRun, Passbook.addPass).shouldBeFunction();
+		valueOf(testRun, Passbook.addPasses).shouldBeFunction();
 		valueOf(testRun, Passbook.containsPass).shouldBeFunction();
 		valueOf(testRun, Passbook.removePass).shouldBeFunction();
 		valueOf(testRun, Passbook.replacePass).shouldBeFunction();

@@ -10,6 +10,7 @@ description: |
 
     -   [Passbook for Developers](https://developer.apple.com/Passbook/)
     -   [Passbook Kit Framework Reference](https://developer.apple.com/library/ios/#documentation/UserExperience/Reference/PassKit_Framework/_index.html)
+    -   [Building Your First Pass](https://developer.apple.com/library/ios/documentation/userexperience/conceptual/PassKit_PG/Chapters/YourFirst.html)
 
     ### Getting Started
 
@@ -67,7 +68,7 @@ description: |
     
 extends: Titanium.Module
 since: "1.0.0"
-platforms: [iphone]
+platforms: [iphone, ipad]
 excludes:
     methods: [fireEvent, applyProperties]
     properties: [bubbleParent]
@@ -102,6 +103,26 @@ methods:
       - name: props
         summary: 
         type: Dictionary<PassbookAddPassProps>
+
+  - name: addPasses
+    since: "1.1.0"
+    summary: |
+        Prompts the user to add multiple passes to the library, view the passes and add to the library, or cancel.
+        Only available on iOS 7 and greater.
+    description: |
+        Throws an exception if there is a problem with the pass or the add pass view could not be created.
+
+        **Example**
+
+            Passbook.addPasses([
+                {passData: file.blob},
+                {passData: file2.blob}
+            ]);
+
+    parameters:
+      - name: props
+        summary: 
+        type: [Dictionary<PassbookAddPassProps>]
 
   - name: containsPass
     summary: Returns whether the user's pass library contains a pass.
@@ -218,6 +239,10 @@ events:
       - name: passes
         type: Array<Modules.Passbook.Pass>
         summary: An array of the passes that were replaced in the user's library.
+
+  - name: addpassesviewclosed
+    since: "1.1.0"
+    summary: Occurs when the add passes view closes.
 
 
 ---
