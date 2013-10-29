@@ -33,6 +33,9 @@ description: |
     ** Note:** It is not necessary to setup entitlements when running on the simulator.
 
     #### Pass
+    The steps below are intended to help you through the process of creating a pass.
+    Apple's guide to creating a pass can be found here: [Building Your First Pass](https://developer.apple.com/library/ios/documentation/userexperience/conceptual/PassKit_PG/Chapters/YourFirst.html)
+
     1. Go to the Apple provisioning portal **Identifiers** > **Pass Type IDs**
     2. Create a new Pass Type ID
     3. Go to **App IDs**
@@ -41,10 +44,23 @@ description: |
     6. Create a new Provisioning Profile and associate it with your App ID
     7. Download and double click your Provisioning Profile
     8. Go to the [Passbook Developer page](https://developer.apple.com/Passbook/) and download the **Example Passes and Sample Code**
-    9. In the `pass.json` file of one of the raw passes found in **Example Passes and Sample Code**, replace the value for `passTypeIdentifier` with your Pass Type ID
-    10. In the **Example Passes and Sample Code** open the `signpass` project with Xcode and build it
-    11. Use the newly created `signpass` command line program to sign the pass that you just edited
-    12. You can add your new pass to your device by emailing it to your device or you can drag it into the simulator
+    9. Double click the downloaded .dmg file to open it
+    10. In the `pass.json` file of one of the raw passes found in **Example Passes and Sample Code**, replace the value for `passTypeIdentifier` with your Pass Type ID
+    11. Replace the value for `teamIdentifier` with your Team ID
+        
+        To find your Team ID, do the following:
+
+        Open Keychain Access and select your certificate.
+        **Select File** > **Get Info** and find the **Organizational Unit** section under **Details**. This is your Team ID. The pass type identifier appears in the certificate under the User ID section.
+        
+    12. In the **Example Passes and Sample Code** open the `signpass` project with Xcode and build it 
+    13. On the left side of Xcode expand the `signpass` project and the `Products` section
+    14. Right click (aka. Control+click) on the `signpass` file and click **Show in Finder**
+    15. Once Finder is open, copy the `signpass` file to the folder that contains your edited raw pass
+    16. Open the terminal and go to that same folder containing `signpass` and the raw pass
+    17. From the terminal use the `signpass` command line program to sign the pass that you just edited (eg. `./signpass -p Lollipop.pass`)
+    18. Once signing is complete you will have a new file in the same folder with with the same name .pkpass (eg. `Lollipop.pkpass`)
+    19. You can add your new pass to your device by emailing it to your device or you can drag it into the simulator
 
     #### Entitlements
     1. Build your project once for device (running on the simulator will not generate the `Entitlements.plist` file we need)
