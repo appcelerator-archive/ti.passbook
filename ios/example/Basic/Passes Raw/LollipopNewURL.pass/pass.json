@@ -1,0 +1,43 @@
+{
+  "formatVersion" : 1,
+  "passTypeIdentifier" : "pass.com.appc.passkit.lollipop",
+  "serialNumber" : "E5982H-I2",
+  "teamIdentifier" : "5MHP5R5CQ0",
+  "webServiceURL" : "https://example.com/passes/new/",
+  "authenticationToken" : "vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc",
+  "relevantDate" : "2012-07-22T14:25-08:00",
+  "barcode" : {
+    "message" : "123456789",
+    "format" : "PKBarcodeFormatPDF417",
+    "messageEncoding" : "iso-8859-1"
+  },
+  "locations" : [
+    {
+      "longitude" : -122.3748889,
+      "latitude" : 37.6189722
+    },
+    {
+      "longitude" : -122.03118,
+      "latitude" : 37.33182
+    }
+  ],
+  "organizationName" : "Paw Planet",
+  "logoText" : "Example Candy Store",
+  "description" : "Coupon for a free lollipop at Example Candy Store",
+  "foregroundColor" : "rgb(255, 255, 255)",
+  "backgroundColor" : "rgb(206, 140, 53)",
+  "coupon" : {
+    "primaryFields" : [
+      {
+        "key" : "offer",
+        "label" : "Free lollipop",
+        "value" : "On July 29"
+      },
+      {
+        "key" : "westley",
+        "label" : "Test",
+        "value" : "as you wish"
+      }
+    ]
+  }
+}

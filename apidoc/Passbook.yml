@@ -1,0 +1,289 @@
+---
+name: Modules.Passbook
+summary: The Passbook module allows you to access Apple's PassKit APIs
+description: |
+    ### Requirements
+    
+    -   iOS 6 or greater
+
+    ### Passbook Resources
+
+    -   [Passbook for Developers](https://developer.apple.com/Passbook/)
+    -   [Passbook Kit Framework Reference](https://developer.apple.com/library/ios/#documentation/UserExperience/Reference/PassKit_Framework/_index.html)
+    -   [Building Your First Pass](https://developer.apple.com/library/ios/documentation/userexperience/conceptual/PassKit_PG/Chapters/YourFirst.html)
+
+    ### Getting Started
+
+    View the [Using Titanium Modules](http://docs.appcelerator.com/titanium/latest/#!/guide/Using_Titanium_Modules) document for instructions on getting
+    started with using this module in your application.
+
+    ### Accessing the Passbook Module
+
+       To access this module from JavaScript, you would do the following:
+
+        var Passbook = require("ti.passbook");
+
+       The `Passbook` variable is a reference to the Module object.
+
+    ### Setup
+        
+    Some functions will not be successful on a device without the correct entitlements. 
+    To take full advanage of the functionality of this module you will need to setup entitlements for your app.
+
+    ** Note:** It is not necessary to setup entitlements when running on the simulator.
+
+    #### Pass
+    The steps below are intended to help you through the process of creating a pass.
+    Apple's guide to creating a pass can be found here: [Building Your First Pass](https://developer.apple.com/library/ios/documentation/userexperience/conceptual/PassKit_PG/Chapters/YourFirst.html)
+
+    1. Go to the Apple provisioning portal **Identifiers** > **Pass Type IDs**
+    2. Create a new Pass Type ID
+    3. Go to **App IDs**
+    4. Create an App ID and enable Passbook for your App ID
+    5. Go to **Provisioning Profiles**
+    6. Create a new Provisioning Profile and associate it with your App ID
+    7. Download and double click your Provisioning Profile
+    8. Go to the [Passbook Developer page](https://developer.apple.com/Passbook/) and download the **Example Passes and Sample Code**
+    9. Double click the downloaded .dmg file to open it
+    10. In the `pass.json` file of one of the raw passes found in **Example Passes and Sample Code**, replace the value for `passTypeIdentifier` with your Pass Type ID
+    11. Replace the value for `teamIdentifier` with your Team ID
+        
+        To find your Team ID, do the following:
+
+        Open Keychain Access and select your certificate.
+        **Select File** > **Get Info** and find the **Organizational Unit** section under **Details**. This is your Team ID. The pass type identifier appears in the certificate under the User ID section.
+        
+    12. In the **Example Passes and Sample Code** open the `signpass` project with Xcode and build it 
+    13. On the left side of Xcode expand the `signpass` project and the `Products` section
+    14. Right click (aka. Control+click) on the `signpass` file and click **Show in Finder**
+    15. Once Finder is open, copy the `signpass` file to the folder that contains your edited raw pass
+    16. Open the terminal and go to that same folder containing `signpass` and the raw pass
+    17. From the terminal use the `signpass` command line program to sign the pass that you just edited (eg. `./signpass -p Lollipop.pass`)
+    18. Once signing is complete you will have a new file in the same folder with with the same name .pkpass (eg. `Lollipop.pkpass`)
+    19. You can add your new pass to your device by emailing it to your device or you can drag it into the simulator
+
+    #### Entitlements
+    1. Build your project once for device (running on the simulator will not generate the `Entitlements.plist` file we need)
+    2. Look in the `build/iphone` folder of your project and find the `Entitlements.plist` file 
+    3. Copy the `Entitlements.plist` to the root of your project next to Resources
+    4. Edit the `Entitlements.plist` in the root of your project and add the lines below
+
+    To entitle the app for a single pass type ID (replace the Pass Type ID with your own):
+        
+        <key>com.apple.developer.pass-type-identifiers</key>
+        <array>
+            <string>$(TeamIdentifierPrefix)pass.com.appc.passkit.lollipop</string>
+        </array>
+
+    To entitle the app for all pass type IDs from the provisioning profile (replace the App ID with your own):
+
+        <key>keychain-access-groups</key>
+        <array>
+            <string>$(AppIdentifierPrefix)com.appc.passkit</string>
+        </array>
+    
+extends: Titanium.Module
+since: "1.0.0"
+platforms: [iphone, ipad]
+excludes:
+    methods: [fireEvent, applyProperties]
+    properties: [bubbleParent]
+
+methods:
+  - name: isPassLibraryAvailable
+    summary: Returns whether the pass library is available.
+    description: |
+        
+        This method is used to see if Passbook is supported on the current device and 
+        should be called before attempting to use any other methods of this module.
+
+        **Example**
+
+            var available = Passbook.isPassLibraryAvailable();
+
+    returns: 
+        type: Boolean
+
+  - name: addPass
+    summary: Displays the pass to the user and allows them to add the pass to the library or cancel.
+    description: |
+        Throws an exception if there is a problem with the pass or the add pass view could not be created.
+
+        **Example**
+
+            Passbook.addPass({
+                passData: file.blob
+            });
+
+    parameters:
+      - name: props
+        summary: 
+        type: Dictionary<PassbookAddPassProps>
+
+  - name: addPasses
+    since: "1.1.0"
+    summary: |
+        Prompts the user to add multiple passes to the library, view the passes and add to the library, or cancel.
+        Only available on iOS 7 and greater.
+    description: |
+        Throws an exception if there is a problem with the pass or the add pass view could not be created.
+
+        **Example**
+
+            Passbook.addPasses([
+                {passData: file.blob},
+                {passData: file2.blob}
+            ]);
+
+    parameters:
+      - name: props
+        summary: 
+        type: [Dictionary<PassbookAddPassProps>]
+
+  - name: containsPass
+    summary: Returns whether the user's pass library contains a pass.
+    description: |
+        Throws an exception if there is a problem with the pass.
+
+        Returns true if the pass exists in the library or false if the pass does not exist in the library.
+
+        **Example**
+
+            var contains = Passbook.containsPass({
+                passData: file.blob
+            }); 
+
+    parameters:
+      - name: props
+        summary: 
+        type: Dictionary<PassbookAddPassProps>
+    returns: 
+        type: Boolean
+
+  - name: removePass
+    summary: Removes a pass from the user's pass library.
+    description: |
+        **Example**
+
+            Passbook.removePass(pass);
+
+    parameters:
+      - name: pass
+        summary: The pass to be removed from the user's library.
+        type: Modules.Passbook.Pass
+
+
+
+  - name: replacePass
+    summary: Replaces a pass that already exists in the user's library.
+    description: |
+        Throws an exception if there is a problem with the pass.
+
+        Returns true if the action was successful or false if it failed.
+
+        **Example**
+
+            var success = Passbook.replacePass({
+                passData: file.blob
+            }); 
+
+    parameters:
+      - name: props
+        summary: 
+        type: Dictionary<PassbookAddPassProps>
+    returns: 
+        type: Boolean
+
+  - name: getPass
+    summary: Retrieves a pass from the user's library using the pass's `passTypeIdentifier` and `serialNumber`.
+    description: |
+        Returns the pass or undefined if it does not exist.
+
+        **Example**
+
+            var pass = Passbook.getPass({
+                passTypeIdentifier: "pass.com.appc.passkit.lollipop",
+                serialNumber: "E5982H-I2"
+            }); 
+
+    parameters:
+      - name: props
+        summary: 
+        type: Dictionary<PassbookGetPassProps>
+    returns: 
+        type: Modules.Passbook.Pass
+
+  - name: showPass
+    summary: Displays the pass in the Passbook app.
+    description: |
+        **Example**
+
+            Passbook.showPass(pass);
+
+    parameters:
+      - name: pass
+        summary: The pass to show
+        type: Modules.Passbook.Pass
+
+
+properties:
+  - name: passes
+    summary: |
+        An unordered array of the passes in the user's library.
+    type: Array<Modules.Passbook.Pass>
+    permission: "read-only"
+
+
+events:
+  - name: addedpasses
+    summary: Occurs when passes are added to the user's library.
+    properties:
+      - name: passes
+        type: Array<Modules.Passbook.Pass>
+        summary: An array of the passes that were added to the user's library.
+
+  - name: removedpasses
+    summary: Occurs when passes are removed from the user's library.
+    properties:
+      - name: passIds
+        type: Array<PassbookGetPassProps>
+        summary: An array of the passes that were added to the user's library.
+
+  - name: replacedpasses
+    summary: Occurs when passes are replaced in the user's library.
+    properties:
+      - name: passes
+        type: Array<Modules.Passbook.Pass>
+        summary: An array of the passes that were replaced in the user's library.
+
+  - name: addpassesviewclosed
+    since: "1.1.0"
+    summary: Occurs when the add passes view closes.
+
+
+---
+name: PassbookAddPassProps
+since: "1.0.0"
+platforms: [iphone]
+summary: A dictionary of properties to pass to the method
+properties:
+  - name: passData
+    summary: The blob of the pkpass file
+    type: Titanium.Blob
+    optional: false
+
+---
+name: PassbookGetPassProps
+since: "1.0.0"
+platforms: [iphone]
+summary: A dictionary of properties to pass to the method
+properties:
+  - name: passTypeIdentifier
+    summary: The pass type ID of the pass
+    type: String
+    optional: false
+  - name: serialNumber
+    summary: The serial number of the pass
+    type: String
+    optional: false
+

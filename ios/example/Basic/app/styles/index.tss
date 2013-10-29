@@ -1,0 +1,14 @@
+".container": {
+	backgroundColor:"white"
+},
+"#textLog": {
+	top: 0,
+	height: '20%',
+	width: '100%',
+	borderWidth: '2',
+	borderColor: '#000',
+	value: 'AppLog: see device log for more info'
+},
+"#tableView": {
+	top: '20%'
+}
