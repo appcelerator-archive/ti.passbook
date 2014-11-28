@@ -11,7 +11,7 @@ install:
     # Android SDK seems to require newer version of SDK
     - wget http://api.appcelerator.net/p/v1/release-download?token=34yycjh6 -O /Library/Application\ Support/Titanium/mobilesdk-2.1.3.GA-osx.zip
     - cd /Library/Application\ Support/Titanium/
-    - unzip -o  mobilesdk-2.1.3.GA-osx.zip
+    - unzip -o  mobilesdk-3.4.1.RC-osx.zip
  
     
     # IOS uses v.1.6
