@@ -2,12 +2,13 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.1.0
+version: 1.2.0
 apiversion: 2
+architectures: armv7 i386 x86_64 arm64
 description: Apple PassKit module
 author: Jon Alter
 license: Apache License, Version 2.0
-copyright: Copyright (c) 2013 by Appcelerator, Inc.
+copyright: Copyright (c) 2013-2014 by Appcelerator, Inc.
 
 
 # these should not be edited
@@ -15,4 +16,4 @@ name: passbook
 moduleid: ti.passbook
 guid: e46dcae2-4553-4ebb-9fe2-1b234776727a
 platform: iphone
-minsdk: 3.1.3.GA
+minsdk: 3.4.1.GA
