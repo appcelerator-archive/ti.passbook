@@ -1,6 +1,6 @@
 /**
  * Ti.Passbook Module
- * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
  * Please see the LICENSE included with this distribution for details.
  */
 
@@ -62,12 +62,26 @@ MAKE_READONLY_PROP(_pass, relevantDate);
 
 -(id)userInfo
 {
-    if (![TiUtils isIOS7OrGreater]) {
-        [TiPassbookModule logAddedIniOS7Warning:@"userInfo"];
-        return nil;
+    return [_pass userInfo];
+}
+
+-(id)deviceName
+{
+    if (![TiUtils isIOS9OrGreater]) {
+        NSLog(@"[WARN] Ti.Passbook.Pass.deviceName is only available in iOS 9 and later.");
+        return;
+    }
+    return [_pass deviceName];
+}
+
+-(NSNumber*)isRemotePass
+{
+    if (![TiUtils isIOS9OrGreater]) {
+        NSLog(@"[WARN] Ti.Passbook.Pass.isRemotePass is only available in iOS 9 and later.");
+        return;
     }
     
-    return [_pass userInfo];
+    return NUMBOOL([_pass isRemotePass]);
 }
 
 @end

@@ -1,6 +1,6 @@
 /**
  * Ti.Passbook Module
- * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2013-2016 by Appcelerator, Inc. All Rights Reserved.
  * Please see the LICENSE included with this distribution for details.
  */
 
@@ -19,60 +19,54 @@
 // this is generated for your module, please do not change it
 -(id)moduleGUID
 {
-	return @"e46dcae2-4553-4ebb-9fe2-1b234776727a";
+    return @"e46dcae2-4553-4ebb-9fe2-1b234776727a";
 }
 
 // this is generated for your module, please do not change it
 -(NSString*)moduleId
 {
-	return @"ti.passbook";
+    return @"ti.passbook";
 }
 
 #pragma mark Lifecycle
 
 -(void)startup
 {
-	// this method is called when the module is first loaded
-	// you *must* call the superclass
-	[super startup];
+    // this method is called when the module is first loaded
+    // you *must* call the superclass
+    [super startup];
     
-#if  __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0
-    NSLog(@"[ERROR] Passbook module compiled without support for iOS 6.0! Nothing will work unless you recompile the module!");
-    return;
-#endif
-    if (![TiUtils isIOS6OrGreater]) {
-        NSLog(@"[ERROR] Passbook module does not support less than iOS 6.0");
-        return;
-    }
+    _passLibrary = [PKPassLibrary new];
     
-    _passLibrary = [[PKPassLibrary alloc] init];
-
     // Listen for PKLibraryEvents
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(passLibraryDidChange:) name:PKPassLibraryDidChangeNotification object:_passLibrary];
-	
-	NSLog(@"[INFO] %@ loaded",self);    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(passLibraryDidChange:)
+                                                 name:PKPassLibraryDidChangeNotification
+                                               object:_passLibrary];
+    
+    NSLog(@"[INFO] %@ loaded",self);
 }
 
 -(void)shutdown:(id)sender
 {
-	// this method is called when the module is being unloaded
-	// typically this is during shutdown. make sure you don't do too
-	// much processing here or the app will be quit forceably
-	
+    // this method is called when the module is being unloaded
+    // typically this is during shutdown. make sure you don't do too
+    // much processing here or the app will be quit forceably
+    
     // Listening for PKLibraryEvents
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-	// you *must* call the superclass
-	[super shutdown:sender];
+    // you *must* call the superclass
+    [super shutdown:sender];
 }
 
-#pragma mark Cleanup 
+#pragma mark Cleanup
 
 -(void)dealloc
 {
     RELEASE_TO_NIL(_passLibrary);
-	// release any resources that have been retained by the module
-	[super dealloc];
+    // release any resources that have been retained by the module
+    [super dealloc];
 }
 
 #pragma mark Listener Notifications
@@ -151,16 +145,21 @@
     return pass;
 }
 
-+(void)logAddedIniOS7Warning:(NSString*)name
-{
-    NSLog(@"[WARN] `%@` is only supported on iOS 7 and greater.", name);
-}
-
 #pragma mark - Public APIs
 
 -(id)isPassLibraryAvailable:(id)args
 {
     return NUMBOOL([PKPassLibrary isPassLibraryAvailable]);
+}
+
+-(id)canAddPasses:(id)unused
+{
+    if (![TiUtils isIOS8OrGreater]) {
+        NSLog(@"[WARN] Ti.Passbook.canAddPasses is only avilable on iOS 8 and later. Will return true fallback");
+        return NUMBOOL(YES);
+    }
+    
+    return NUMBOOL([PKAddPassesViewController canAddPasses]);
 }
 
 -(void)addPass:(id)args
@@ -188,11 +187,6 @@
 
 -(void)addPasses:(id)args
 {
-    if (![TiUtils isIOS7OrGreater]) {
-        [TiPassbookModule logAddedIniOS7Warning:@"addPasses()"];
-        return;
-    }
-    
     ENSURE_SINGLE_ARG(args, NSArray);
     NSMutableArray *passes = [NSMutableArray arrayWithCapacity:[args count]];
     for (id passData in args) {

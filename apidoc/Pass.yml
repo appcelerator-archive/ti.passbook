@@ -57,8 +57,23 @@ properties:
 
   - name: userInfo
     since: "1.1.0"
-    summary: Developer-specific custom data. Only available on iOS 7 and greater.
+    summary: Developer-specific custom data.
+    osver: {since:{ios: "7.0"}}
     type: Dictionary
+    permission: "read-only"
+
+  - name: deviceName
+    since: "1.3.0"
+    osver: {since:{ios: "9.0"}}
+    summary: The device-name linked to the pass.
+    type: String
+    permission: "read-only"
+
+  - name: isRemotePass
+    since: "1.3.0"
+    osver: {since:{ios: "9.0"}}
+    summary: Returns whether the pass is a remote-pass.
+    type: Boolean
     permission: "read-only"
 
   - name: localizedName

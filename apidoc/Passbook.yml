@@ -104,6 +104,13 @@ methods:
     returns: 
         type: Boolean
 
+  - name: canAddPasses
+    summary: Returns whether the pass library can add new passes.
+    since: "1.3.0"
+    osver: {since:{ios: "8.0"}}
+    returns: 
+        type: Boolean
+
   - name: addPass
     summary: Displays the pass to the user and allows them to add the pass to the library or cancel.
     description: |
